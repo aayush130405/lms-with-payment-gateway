@@ -6,6 +6,16 @@ dotenv.config();
 const app = express()
 const PORT = process.env.PORT
 
+//body parser middleware
+
+//404 handler
+app.use((req, res) => {
+    res.status(404).json({
+        status: "error",
+        message: "Route not found"
+    })
+})
+
 app.listen(PORT, () => {
     console.log(`Server is running at ${PORT} in ${process.env.NODE_ENV} mode`)
 })
