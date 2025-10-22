@@ -7,6 +7,8 @@ const app = express()
 const PORT = process.env.PORT
 
 //body parser middleware
+app.use(express.json({limit: "10kb"}))
+app.use(express.urlencoded({extended: true, limit: "10kb"}))
 
 //404 handler
 app.use((req, res) => {
