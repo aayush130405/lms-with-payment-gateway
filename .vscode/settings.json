@@ -1,0 +1,5 @@
+{
+    "files.autoSave": "onWindowChange",
+    "editor.mouseWheelZoom": true,
+    "editor.aiStats.enabled": false
+}
