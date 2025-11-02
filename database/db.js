@@ -68,4 +68,11 @@ class DatabaseConnection {
             process.exit(1)
         }
     }
+
+    async handleDisconnection() {
+        if(!this.isConnected) {
+            console.log("Attempting to reconnect to MONGODB...")
+            this.connect()
+        }
+    }
 }
