@@ -21,8 +21,8 @@ class DatabaseConnection {
         })
         mongoose.connection.on('disconnected', () => {
             console.log("MONGODB is DISCONNECTED");
-            this.isConnected = false;
-            //TODO: attempt a reconnection to mdb
+            
+            this.handleDisconnection()
         })
     }
 
@@ -73,6 +73,27 @@ class DatabaseConnection {
         if(!this.isConnected) {
             console.log("Attempting to reconnect to MONGODB...")
             this.connect()
+        }
+    }
+
+    async handleAppTermination() {
+        try {
+            await mongoose.connection.close()
+            console.log("MongoDB connection closed through app termination")
+            process.exit(0)
+        } catch (error) {
+            console.error(`Error during DB disconnection`, error)
+            process.exit(1)
+        }
+    }
+
+    getConnectionStatus() {
+        return {
+            isConnected: this.isConnected,
+            readyState: mongoose.connection.readyState,
+            host: mongoose.connection.host,
+            name: mongoose.connection.name
+
         }
     }
 }
