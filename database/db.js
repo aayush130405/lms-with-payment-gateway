@@ -27,25 +27,30 @@ class DatabaseConnection {
     }
 
     async connect() {
-        if(!process.env.MONGO_URI) {
-            throw new Error("MONGODB URI is not defined in .env file")
+        try {
+            if(!process.env.MONGO_URI) {
+                throw new Error("MONGODB URI is not defined in .env file")
+            }
+    
+            const connectionOptions = {
+                useNewUrlParser: true,  //Tells Mongoose to use the new way of parsing the MongoDB connection string (URL)
+                useUnifiedTopology: true,   //Enables the new connection engine (unified topology) that MongoDB introduced
+                maxPoolSize: 10,    //Sets the maximum number of connections that can be kept open in the pool
+                serverSelectionTimeoutMS: 5000,     //The maximum time (in milliseconds) your app will wait while trying to find a working MongoDB server
+                socketTimeoutMS: 45000,     //The maximum time (in milliseconds) a socket (network connection) stays open when waiting for a response
+                family: 4       //Whether to connect using IPv4 or IPv6, 4 in this case
+            }
+    
+            if(process.env.NODE_ENV === 'development') {
+                mongoose.set('debug', true)
+            }
+    
+            await mongoose.connect(process.env.MONGO_URI, connectionOptions)
+            this.retryCount = 0;        //set retryCount as 0 bcz connection is successful
+        } catch (error) {
+            console.error(error.message)
+            await this.handleConnectionError()
         }
-
-        const connectionOptions = {
-            useNewUrlParser: true,  //Tells Mongoose to use the new way of parsing the MongoDB connection string (URL)
-            useUnifiedTopology: true,   //Enables the new connection engine (unified topology) that MongoDB introduced
-            maxPoolSize: 10,    //Sets the maximum number of connections that can be kept open in the pool
-            serverSelectionTimeoutMS: 5000,     //The maximum time (in milliseconds) your app will wait while trying to find a working MongoDB server
-            socketTimeoutMS: 45000,     //The maximum time (in milliseconds) a socket (network connection) stays open when waiting for a response
-            family: 4       //Whether to connect using IPv4 or IPv6, 4 in this case
-        }
-
-        if(process.env.NODE_ENV === 'development') {
-            mongoose.set('debug', true)
-        }
-
-        await mongoose.connect(process.env.MONGO_URI, connectionOptions)
-        this.retryCount = 0;        //set retryCount as 0 bcz connection is successful
     }
 
     async handleConnectionError() {
@@ -58,6 +63,9 @@ class DatabaseConnection {
             }, RETRY_INTERVAL))
 
             return this.connect()
+        } else {
+            console.error(`Failed to connect to MONGODB after ${MAX_RETRIES} attempts`)
+            process.exit(1)
         }
     }
 }
