@@ -24,6 +24,8 @@ class DatabaseConnection {
             
             this.handleDisconnection()
         })
+
+        process.on('SIGTERM', this.handleAppTermination.bind(this))         //using .bind() as the method is outside the constructor
     }
 
     async connect() {
@@ -97,3 +99,9 @@ class DatabaseConnection {
         }
     }
 }
+
+//create a singleton instance
+const dbConnection = new DatabaseConnection() 
+
+export default dbConnection.connect.bind(dbConnection)
+export const getDBStatus = dbConnection.getConnectionStatus.bind(dbConnection)
