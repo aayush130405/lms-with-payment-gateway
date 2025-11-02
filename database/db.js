@@ -47,4 +47,17 @@ class DatabaseConnection {
         await mongoose.connect(process.env.MONGO_URI, connectionOptions)
         this.retryCount = 0;        //set retryCount as 0 bcz connection is successful
     }
+
+    async handleConnectionError() {
+        if(this.retryCount < MAX_RETRIES) {
+            this.retryCount++
+            console.log(`Retrying connection... Attempt ${this.retryCount} of ${MAX_RETRIES}`);
+
+            await new Promise(resolve => setTimeout(() => {
+                resolve
+            }, RETRY_INTERVAL))
+
+            return this.connect()
+        }
+    }
 }
