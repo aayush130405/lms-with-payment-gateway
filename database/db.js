@@ -84,7 +84,7 @@ class DatabaseConnection {
             console.log("MongoDB connection closed through app termination")
             process.exit(0)
         } catch (error) {
-            console.error(`Error during DB disconnection`, error)
+            console.error(`Error during DB termination`, error)
             process.exit(1)
         }
     }
@@ -95,7 +95,6 @@ class DatabaseConnection {
             readyState: mongoose.connection.readyState,
             host: mongoose.connection.host,
             name: mongoose.connection.name
-
         }
     }
 }
