@@ -71,4 +71,19 @@ userSchema.pre('save', async function(next) {
     next()      //to pass onto next task after executing this one
 })
 
+//compare password method which is also added to the user schema
+userSchema.methods.comparePassword = async function(enterPassword) {
+    return await bcrypt.compare(enterPassword, this.password)
+}
+
+userSchema.methods.getResetPasswordToken = function() {
+    const resetToken = crypto.randomBytes(20).toString('hex')
+    this.resetPasswordToken = crypto
+        .createHash('sha256')
+        .update(resetToken)
+        .digest('hex')
+    this.resetPasswordExpiry = Date.now() + 10*60*1000 //add 10 minutes to current time
+    return resetToken
+}
+
 export const User = mongoose.model("User", userSchema)
