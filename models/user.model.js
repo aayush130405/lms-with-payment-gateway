@@ -60,7 +60,9 @@ const userSchema = new mongoose.Schema({
         default: Date.now
     }
 }, {
-    timestamps: true
+    timestamps: true,
+    toJSON: {virtuals: true},
+    toObject: {virtuals: true}
 });
 
 //hashing the password before saving the schema
