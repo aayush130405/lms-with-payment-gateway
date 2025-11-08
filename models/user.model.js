@@ -91,7 +91,7 @@ userSchema.methods.getResetPasswordToken = function() {
 //method to update lastActive method
 userSchema.methods.updateLastActive = function() {
     this.lastActive = Date.now()
-    return this.lastActive({validateBeforeSace: false})
+    return this.lastActive({validateBeforeSave: false})
 }
 
 //virtual field for total enrolled courses
