@@ -43,7 +43,7 @@ lectureSchema.pre('save', function(next) {
         this.duration = Math.round(this.duration * 100)/100
     }
 
-    next()  //to proceed further
+    next()
 })
 
 export const Lecture = mongoose.model("Lecture", lectureSchema)
