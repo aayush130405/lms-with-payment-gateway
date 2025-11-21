@@ -19,3 +19,26 @@ const lectureProgressSchema = new mongoose.Schema({
         default: Date.now
     }
 })
+
+const courseProgressSchema = new mongoose.Schema({
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: [true, "User reference is required"]
+    },
+    course: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Course',
+        required: [true, "Course reference is required"]
+    },
+    isCompleted: {
+        type: Boolean,
+        default: false
+    },
+    completionPercentage: {
+        type: Number,
+        default: 0,
+        min: 0,
+        max: 100
+    }
+})
