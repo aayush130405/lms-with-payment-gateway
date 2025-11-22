@@ -41,4 +41,4 @@ const courseProgressSchema = new mongoose.Schema({
         min: 0,
         max: 100
     }
-})
+})      //schema to calculate the course progress
