@@ -20,6 +20,7 @@ const lectureProgressSchema = new mongoose.Schema({
     }
 })
 
+//course progress
 const courseProgressSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
