@@ -41,5 +41,14 @@ const courseProgressSchema = new mongoose.Schema({
         default: 0,
         min: 0,
         max: 100
+    },
+    lectureProgress: [lectureProgressSchema],
+    lastAccessed: {
+        type: Date,
+        default: Date.now
     }
+}, {
+    timestamps: true,
+    toJSON: {virtuals: true},
+    toObject: {virtuals: true}
 })
