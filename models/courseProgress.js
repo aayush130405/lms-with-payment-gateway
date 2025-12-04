@@ -20,7 +20,6 @@ const lectureProgressSchema = new mongoose.Schema({
     }
 })
 
-//segment to track courseProgress
 const courseProgressSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
