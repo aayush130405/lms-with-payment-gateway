@@ -48,7 +48,7 @@ const coursePurchaseSchema = new mongoose.Schema({
     refundReason: {
         type: String
     },
-    metadata: {
+    metadata: {     //for extra stuff
         type: Map,
         of: String
     }
