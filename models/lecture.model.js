@@ -38,6 +38,7 @@ const lectureSchema = new mongoose.Schema({
     toObject: {virtuals: true}
 })
 
+//rounding the duration
 lectureSchema.pre('save', function(next) {
     if(this.duration) {
         this.duration = Math.round(this.duration * 100)/100
