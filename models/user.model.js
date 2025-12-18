@@ -99,4 +99,4 @@ userSchema.virtual('totalEnrolledCourses').get(function() {
     return this.enrolledCourses.length
 })
 
-export const User = mongoose.model("User", userSchema)      //exporting user model
+export const User = mongoose.model("User", userSchema)
