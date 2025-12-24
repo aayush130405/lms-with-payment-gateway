@@ -62,6 +62,7 @@ courseProgressSchema.pre('save', function(next) {
         this.isCompleted = this.completionPercentage === 100
     }
     next()
+})
 
 courseProgressSchema.methods.updateLastAccessed = function() {
     this.lastAccessed = Date.now()
