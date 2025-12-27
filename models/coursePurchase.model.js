@@ -57,3 +57,8 @@ const coursePurchaseSchema = new mongoose.Schema({
     toJSON: {virtuals: true},
     toObject: {virtuals: true}
 })
+
+//indexing
+coursePurchaseSchema.index({user: 1, course: 1});
+coursePurchaseSchema.index({status: 1});
+coursePurchaseSchema.index({createdAt: -1}); //-1 will help to fetch the latest created courses
