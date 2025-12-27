@@ -64,6 +64,7 @@ courseProgressSchema.pre('save', function(next) {
     next()
 })
 
+//method to update last accessed
 courseProgressSchema.methods.updateLastAccessed = function() {
     this.lastAccessed = Date.now()
     return this.save({validateBeforeSave: false})
