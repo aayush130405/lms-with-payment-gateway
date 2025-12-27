@@ -63,8 +63,19 @@ coursePurchaseSchema.index({user: 1, course: 1});
 coursePurchaseSchema.index({status: 1});
 coursePurchaseSchema.index({createdAt: -1}); //-1 will help to fetch the latest created courses
 
+//field to check if course is still refundable
 coursePurchaseSchema.virtual('isRefundable').get(function() {
     if(this.status !== 'completed') return false;
     const thirtyDaysAgo = new Date(Date.now() - 30*24*60*60*1000);
     return this.createdAt > thirtyDaysAgo; 
 })
+
+//method to process refund
+coursePurchaseSchema.method.processRefund = async function(reason, amount) {
+    this.status = 'refunded';
+    this.refundReason = reason;
+    this.refundAmount = amount || this.refundAmount;
+    return this.save();
+}
+
+export const CoursePurchase = mongoose.model('CoursePurchase', coursePurchaseSchema);
