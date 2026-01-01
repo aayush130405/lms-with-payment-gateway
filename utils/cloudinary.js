@@ -26,7 +26,7 @@ export const deleteMediaFromCloudinary = async (publicId) => {
         await cloudinary.uploader.destroy(publicId);
     } catch (error) {
         console.log("Failed to delete media from cloudinary");
-        console.log(error)
+        console.log(error);
     }
 }
 
@@ -35,6 +35,6 @@ export const deleteVideoFromCloudinary = async (publicId) => {
         await cloudinary.uploader.destroy(publicId, {resource_type: 'video'});
     } catch (error) {
         console.log("Failed to delete media from cloudinary");
-        console.log(error)
+        console.log(error);
     }
 }
