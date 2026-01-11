@@ -1,3 +1,4 @@
+//function to get readyState text
 function getReadyStateText(state) {
     switch (state) {
         case 0: return 'Disconnected';
