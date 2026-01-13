@@ -6,14 +6,16 @@ import helmet from "helmet";
 import mongoSanitize from "express-mongo-sanitize"
 import hpp from "hpp";
 import cookieParser from "cookie-parser";
-import cors from "cors"
+import cors from "cors";
+
+import healthRoute from "./routes/health.routes.js";
 
 dotenv.config();
 
 const app = express()
 const PORT = process.env.PORT
 
-//global rate limit
+//global rate limit 
 const limiter = rateLimit({
     windowMs: 15*60*1000,        //15 minutes
     limit: 100,                  //limit each IP to 100 requests per window (15 minutes here)
@@ -63,6 +65,7 @@ app.use(cors({
 }))
 
 //API routes
+app.use('/health', healthRoute);
 
 //404 handler
 app.use((req, res) => {
