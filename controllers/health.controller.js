@@ -18,7 +18,7 @@ export const checkHealth = async (req, res) => {
                 server: {
                     status: 'Healthy',
                     uptime: process.uptime(),
-                    memoryUsage: process.memoryUsage
+                    memoryUsage: process.memoryUsage()
                 }
             }
         }
