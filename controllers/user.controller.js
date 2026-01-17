@@ -1,6 +1,7 @@
 import { ApiError, catchAsync } from '../middleware/error.middleware';
 import { User } from '../models/user.model.js';
 
+//create user account
 export const createUserAccount = catchAsync(async (req, res) => {
     const { name, email, password, role='student' } = req.body;
 
