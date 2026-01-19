@@ -1,5 +1,6 @@
 import { ApiError, catchAsync } from '../middleware/error.middleware';
 import { User } from '../models/user.model.js';
+import { generateToken } from '../utils/generateToken.js';
 
 //create user account
 export const createUserAccount = catchAsync(async (req, res) => {
@@ -10,4 +11,27 @@ export const createUserAccount = catchAsync(async (req, res) => {
     if(existingUser) {
         throw new ApiError('User already exists', 400);
     }
+
+    const user = await User.create({
+        name,
+        email: email.toLowerCase(),
+        password,
+        role
+    })
+
+    await user.updateLastActive();
+    generateToken(res, user, "Account created successfully");
+})
+
+export const authenticateUser = catchAsync(async (req, res) => {
+    const {email, password} = req.body;
+
+    const user = User.findOne(({email: email.toLowerCase()})).select('+password');
+
+    if(!user || !(await user.comparePassword(password))) {
+        throw new ApiError('Invalid email or password', 401);
+    }
+
+    await user.updateLastActive();
+    generateToken(res, user, `Welcome back ${user.name}`);
 })
