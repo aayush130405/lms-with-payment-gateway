@@ -35,3 +35,15 @@ export const authenticateUser = catchAsync(async (req, res) => {
     await user.updateLastActive();
     generateToken(res, user, `Welcome back ${user.name}`);
 })
+
+export const signOutUser = catchAsync(async (_, res) => {
+    res.cookie('token', '', {maxAge: 0});
+    res.status(200).json({
+        success: true,
+        message: "Signed out successfully"
+    })
+})
+
+export const getCurrentUserProfile = catchAsync(async (req, res) => {
+    
+})
