@@ -13,3 +13,7 @@ export const catchAsync = (fn) => {
         fn(req, res, next).catch(next);
     }
 }
+
+export const handleJWTError = () => {
+    new ApiError('Invalid token, please login again!');
+}
