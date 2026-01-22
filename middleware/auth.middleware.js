@@ -13,7 +13,7 @@ export const isAuthenticated = catchAsync(async (req, res, next) => {
         req.id = decoded.userId;
         next();
     } catch (error) {
-        
+        throw new ApiError('JWT Token error', 401);
     }
 
     next();
