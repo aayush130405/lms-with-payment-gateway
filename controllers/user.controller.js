@@ -1,5 +1,6 @@
 import { ApiError, catchAsync } from '../middleware/error.middleware';
 import { User } from '../models/user.model.js';
+import { uploadMedia, deleteMediaFromCloudinary } from '../utils/cloudinary.js';
 import { generateToken } from '../utils/generateToken.js';
 
 //create user account
@@ -64,5 +65,38 @@ export const getCurrentUserProfile = catchAsync(async (req, res) => {
 })
 
 export const updateUserProfile = catchAsync(async (req, res) => {
-    
+    const {name, email} = req.body;
+    const updatedData = { 
+        name, 
+        email: email?.toLowerCase(), 
+        bio
+    };
+
+    if(req.file) {
+        const updatedAvatar = await uploadMedia(req.file.path);
+        updatedData.avatar = updatedAvatar.secure_url;
+
+        //delete old avatar
+        const user = User.findById(req.id);
+        if(user.avatar && user.avatar !== 'default-avatar.png') {
+            await deleteMediaFromCloudinary(user.avatar);
+        }
+    }
+
+    //update user and get updated doc
+    const updatedUser = await User.findByIdAndUpdate(
+        req.id, 
+        updatedData, 
+        {new: true, runValidators: true}
+    );
+
+    if(!updatedUser) {
+        throw new ApiError("Failed to update user", 403);
+    }
+
+    res.status(200).json({
+        success: true, 
+        message: "User updated successfully",
+        data: updatedUser
+    })
 })
