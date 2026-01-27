@@ -62,3 +62,7 @@ export const getCurrentUserProfile = catchAsync(async (req, res) => {
         }
     })
 })
+
+export const updateUserProfile = catchAsync(async (req, res) => {
+    
+})
