@@ -18,3 +18,30 @@ export const validate = (validations) => {
         throw new Error("Validation error");
     }
 }
+
+export const commonValidations = {
+    pagination: [
+        query('page')
+            .optional()
+            .isInt({min: 1})
+            .withMessage('Page must be a positive integer'),
+        query('limit')
+            .optional()
+            .isInt({min: 1, max: 100})
+            .withMessage('Page must be between 1 and 100')
+    ],
+    email: 
+        body('email')
+            .isEmail()
+            .normalizeEmail()
+            .withMessage('Please provide a valid email'),
+    name: 
+        body('name')
+            .trim()
+            .isLength({min: 2, max: 50})
+            .withMessage('Please provide a valid name')
+}
+
+export const validateSignup = validate([
+    commonValidations.email, commonValidations.name
+]);
