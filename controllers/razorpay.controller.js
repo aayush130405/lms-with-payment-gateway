@@ -1,5 +1,7 @@
 import Razorpay from "razorpay";
 
+import crypto from "crypto";
+
 import { Course } from '../models/course.model.js'
 import { CoursePurchase } from '../models/coursePurchase.model.js'
 
@@ -37,7 +39,6 @@ export const createRazorpayOrder = async (req, res) => {
 
         const order = await razorpay.orders.create(options);
 
-        //after this assuming a success response we work further to verify the amount that is paid to the actual amount in the db
         newPurchase.paymentId = order.id;
         await newPurchase.save();
 
@@ -52,6 +53,38 @@ export const createRazorpayOrder = async (req, res) => {
 
 
     } catch (error) {
-        
+        console.log(error);
     }
+}
+
+export const verifyPayment = async (req, res) => {
+    try {
+        const { razorpay_signature, razorpay_order_id, razorpay_payment_id } = req.body;
+    
+        const body = razorpay_order_id + "|" + razorpay_payment_id;
+        const expectedSignature = crypto
+                                        .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
+                                        .update(body.toString())
+                                        .digest('hex');
+    
+        const isAuthentic = expectedSignature === razorpay_signature;
+    
+        if(!isAuthentic) {
+            return res.status(403).json({message: "Failed to verify payment authenticity"});
+        }
+    
+        const purchase = await CoursePurchase.findOne({paymentId: razorpay_order_id});
+    
+        if(!purchase) {
+            return res.status(404).json({message: "Purchase record not found"});
+        }
+    
+        purchase.status = "completed";
+        await purchase.save();
+    
+        res.status(200).json({success: true, message: "Payment verified successfully", courseId: purchase.course});
+    } catch (error) {
+        console.log(error);
+    }
+
 }
